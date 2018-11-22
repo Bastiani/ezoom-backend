@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLEnumType } from 'graphql';
-import { globalIdField } from 'graphql-relay';
+import { globalIdField, fromGlobalId } from 'graphql-relay';
 import { sequelizeConnection } from 'graphql-sequelize';
 
 import db from '../../models';
@@ -56,9 +56,13 @@ export const ProductConnectionType = sequelizeConnection({
     },
   }),
   where: (key, value, currentWhere) => {
-    if (key === 'title') {
+    console.log('========== key', key, value);
+
+    if (key === 'category') {
+      console.log('=========', fromGlobalId(value).id);
+
       return {
-        name: { $like: `%${value}%` },
+        category: fromGlobalId(value).id,
       };
     }
 

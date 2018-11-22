@@ -1,6 +1,7 @@
 // @flow
-import { GraphQLObjectType, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLInt, GraphQLID } from 'graphql';
 import { resolver } from 'graphql-sequelize';
+import { fromGlobalId } from 'graphql-relay';
 
 import UserType, { UserConnectionType } from './types/UserType';
 import CategoryType, { CategoryConnectionType } from './types/CategoryType';
@@ -38,10 +39,11 @@ export default new GraphQLObjectType({
       description: 'Category',
       args: {
         id: {
-          type: GraphQLNonNull(GraphQLInt),
+          type: GraphQLNonNull(GraphQLID),
         },
       },
-      resolve: resolver((obj, args, context) => context.db.Category, {}),
+      resolve: async (obj, { id }, { db: { Category } }) => Category.findById(fromGlobalId(id).id),
+      //resolver((obj, args, context) => context.db.Category, {}),
     },
     categories: {
       type: CategoryConnectionType.connectionType,
@@ -53,15 +55,26 @@ export default new GraphQLObjectType({
       description: 'Product',
       args: {
         id: {
-          type: GraphQLNonNull(GraphQLInt),
+          type: GraphQLNonNull(GraphQLID),
         },
       },
       resolve: resolver((obj, args, context) => context.db.Product, {}),
     },
     products: {
       type: ProductConnectionType.connectionType,
-      args: ProductConnectionType.connectionArgs,
-      resolve: ProductConnectionType.resolve,
+      args: {
+        ...ProductConnectionType.connectionArgs,
+        category: {
+          description: 'id of the category',
+          type: GraphQLID,
+        },
+      },
+      resolve: (obj, args, context, info) => {
+        const { user } = context;
+        if (!user) throw new Error('Unauthorized user');
+
+        return ProductConnectionType.resolve(obj, args, context, info);
+      },
     },
   }),
 });
