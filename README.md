@@ -4,3 +4,5 @@
 - `yarn`
 - `yarn nodemon`
 - open http://localhost:5000/playground
+
+![](https://github.com/Bastiani/ezoom-backend/blob/master/docs/token-header.gif?raw=true)
