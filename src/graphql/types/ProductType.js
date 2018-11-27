@@ -56,11 +56,7 @@ export const ProductConnectionType = sequelizeConnection({
     },
   }),
   where: (key, value, currentWhere) => {
-    console.log('========== key', key, value);
-
     if (key === 'category') {
-      console.log('=========', fromGlobalId(value).id);
-
       return {
         category: fromGlobalId(value).id,
       };

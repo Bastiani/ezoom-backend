@@ -15,10 +15,10 @@ const UserType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'Name of the user',
     },
-    password: {
-      type: GraphQLString,
-      description: 'Password of the user',
-    },
+    // password: {
+    //   type: GraphQLString,
+    //   description: 'Password of the user',
+    // },
     email: {
       type: GraphQLString,
       description: 'Email of the user',
