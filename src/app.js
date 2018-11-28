@@ -55,7 +55,7 @@ router.all(
   '/playground',
   koaPlayground({
     endpoint: '/graphql',
-    subscriptionsEndpoint: `ws://api.rafaelbastiani.com:${graphqlPort}/subscriptions`,
+    subscriptionsEndpoint: `ws://localhost:${graphqlPort}/subscriptions`,
   }),
 );
 
